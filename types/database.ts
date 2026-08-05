@@ -1,0 +1,78 @@
+export type Profile = {
+  id: string;
+  nama: string;
+  email: string;
+  unit_kerja: string;
+  bib_number: number;
+  role: "peserta" | "admin";
+  foto_profil: string | null;
+  created_at: string;
+};
+
+export type Activity = {
+  id: string;
+  user_id: string;
+  tanggal_aktivitas: string; // date, ISO yyyy-mm-dd
+  waktu_mulai: string; // time, HH:MM:SS
+  jarak_km: number;
+  durasi: string; // interval, e.g. "01:23:45"
+  waktu_selesai: string; // time, generated
+  pace: string; // interval, generated
+  heart_rate: number | null;
+  elevation_gain: number | null;
+  bukti_strava: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type EventSettings = {
+  id: boolean;
+  target_km: number;
+  race_start: string;
+  race_end: string;
+};
+
+export type LeaderboardRow = {
+  user_id: string;
+  nama: string;
+  unit_kerja: string;
+  bib_number: number;
+  total_km: number;
+  total_entry: number;
+  total_durasi: string;
+  avg_pace: string | null;
+  rank: number;
+};
+
+export type Database = {
+  public: {
+    Tables: {
+      profiles: {
+        Row: Profile;
+        Insert: Partial<Profile> & { id: string };
+        Update: Partial<Profile>;
+      };
+      activities: {
+        Row: Activity;
+        Insert: Partial<Activity> & {
+          user_id: string;
+          tanggal_aktivitas: string;
+          waktu_mulai: string;
+          jarak_km: number;
+          durasi: string;
+        };
+        Update: Partial<Activity>;
+      };
+      event_settings: {
+        Row: EventSettings;
+        Insert: Partial<EventSettings>;
+        Update: Partial<EventSettings>;
+      };
+    };
+    Views: {
+      leaderboard: {
+        Row: LeaderboardRow;
+      };
+    };
+  };
+};
