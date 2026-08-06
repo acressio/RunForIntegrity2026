@@ -78,7 +78,7 @@ export default function SignupPage() {
           <img
             src="/logo-run-for-integrity.png"
             alt="Run For Integrity"
-            className="mx-auto mb-4 h-20 w-20 rounded-xl2 object-contain"
+            className="mx-auto mb-4 h-32 w-32 rounded-xl2 object-contain"
           />
           <h1 className="text-2xl font-black tracking-tight">Daftar Peserta</h1>
         </div>
