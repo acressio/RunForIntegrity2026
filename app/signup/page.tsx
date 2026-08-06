@@ -34,6 +34,7 @@ export default function SignupPage() {
       password,
       options: {
         data: { nama, unit_kerja: unitKerja },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 

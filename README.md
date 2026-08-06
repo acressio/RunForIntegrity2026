@@ -26,11 +26,14 @@ Supabase (Auth, Postgres, RLS), siap deploy ke Vercel.
    update public.profiles set role = 'admin' where email = 'admin@contoh.go.id';
    ```
 6. Buka **Authentication > URL Configuration**, tambahkan URL berikut ke
-   **Redirect URLs** (perlu untuk fitur "Lupa Password"):
-   - `http://localhost:3000/reset-password` (untuk development lokal)
-   - `https://<domain-produksi-kamu>/reset-password` (setelah deploy ke Vercel/domain kustom)
+   **Redirect URLs** (perlu untuk fitur "Lupa Password" & konfirmasi email):
+   - `http://localhost:3000/auth/callback` (untuk development lokal)
+   - `https://<domain-produksi-kamu>/auth/callback` (setelah deploy ke Vercel/domain kustom)
 
-   Tanpa ini, link reset password dari email akan ditolak oleh Supabase.
+   Tanpa ini, link dari email akan ditolak Supabase dan mendarat di halaman
+   yang salah. Sistem sekarang juga punya jaring pengaman: kalau link
+   terlanjur mendarat di halaman utama (`/`), kode di dalamnya akan otomatis
+   diteruskan ke `/auth/callback`, bukan hilang.
 
 ## 2. Environment Variables
 
