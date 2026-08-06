@@ -51,7 +51,7 @@ export default function LoginPage() {
           <img
             src="/logo-run-for-integrity.png"
             alt="Run For Integrity"
-            className="mx-auto mb-4 h-20 w-20 rounded-xl2 object-contain"
+            className="mx-auto mt-18 mb-4 h-45 w-45 rounded-xl2 object-contain"
           />
           <h1 className="text-2xl font-black tracking-tight">DBI Virtual Run 2026</h1>
           <p className="mt-1 text-sm text-muted">Masuk ke dashboard runner kamu</p>
