@@ -51,7 +51,7 @@ export default function LoginPage() {
           <img
             src="/logo-run-for-integrity.png"
             alt="Run For Integrity"
-            className="mx-auto mt-18 mb-4 h-40 w-40 rounded-xl2 object-contain"
+            className="mx-auto mb-4 h-20 w-20 rounded-xl2 object-contain"
           />
           <h1 className="text-2xl font-black tracking-tight">DBI Virtual Run 2026</h1>
           <p className="mt-1 text-sm text-muted">Masuk ke dashboard runner kamu</p>
@@ -92,6 +92,14 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
             />
+            <div className="mt-1.5 text-right">
+              <Link
+                href="/forgot-password"
+                className="text-xs font-medium text-accent-light hover:underline"
+              >
+                Lupa password?
+              </Link>
+            </div>
           </div>
 
           <button type="submit" disabled={loading} className="btn-primary w-full">

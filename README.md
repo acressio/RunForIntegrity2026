@@ -25,6 +25,12 @@ Supabase (Auth, Postgres, RLS), siap deploy ke Vercel.
    ```sql
    update public.profiles set role = 'admin' where email = 'admin@contoh.go.id';
    ```
+6. Buka **Authentication > URL Configuration**, tambahkan URL berikut ke
+   **Redirect URLs** (perlu untuk fitur "Lupa Password"):
+   - `http://localhost:3000/reset-password` (untuk development lokal)
+   - `https://<domain-produksi-kamu>/reset-password` (setelah deploy ke Vercel/domain kustom)
+
+   Tanpa ini, link reset password dari email akan ditolak oleh Supabase.
 
 ## 2. Environment Variables
 

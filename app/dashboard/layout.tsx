@@ -29,7 +29,7 @@ export default async function DashboardLayout({
             <img
               src="/logo-run-for-integrity.png"
               alt="Run For Integrity"
-              className="h-16 w-16 rounded-lg object-contain"
+              className="h-12 w-12 rounded-lg object-contain"
             />
             <div>
               <p className="text-sm font-bold leading-tight">Dashboard Runner</p>
