@@ -29,6 +29,8 @@ Supabase (Auth, Postgres, RLS), siap deploy ke Vercel.
    **Redirect URLs** (perlu untuk fitur "Lupa Password" & konfirmasi email):
    - `http://localhost:3000/auth/callback` (untuk development lokal)
    - `https://<domain-produksi-kamu>/auth/callback` (setelah deploy ke Vercel/domain kustom)
+   - `http://localhost:3000/auth/reset-callback` (khusus link "Lupa Password", development lokal)
+   - `https://<domain-produksi-kamu>/auth/reset-callback` (khusus link "Lupa Password", produksi)
 
    Tanpa ini, link dari email akan ditolak Supabase dan mendarat di halaman
    yang salah. Sistem sekarang juga punya jaring pengaman: kalau link
