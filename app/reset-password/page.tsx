@@ -50,12 +50,19 @@ export default function ResetPasswordPage() {
 
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
-    setLoading(false);
 
     if (error) {
+      setLoading(false);
       setError(error.message);
       return;
     }
+
+    // Password berhasil diganti. Sesi dari link recovery masih aktif secara
+    // otomatis (perilaku standar Supabase) - kita sengaja logout di sini
+    // supaya peserta harus login ulang pakai password barunya, bukan
+    // langsung "nyelonong" masuk dashboard tanpa konfirmasi password baru.
+    await supabase.auth.signOut();
+    setLoading(false);
 
     setDone(true);
     setTimeout(() => {
