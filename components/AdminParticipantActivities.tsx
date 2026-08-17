@@ -3,25 +3,20 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { formatDateID, paceToDisplay } from "@/lib/utils";
+import { formatDateID, formatTimeHM, paceToDisplay } from "@/lib/utils";
+import type { Activity } from "@/types/database";
 
-type Row = {
-  id: string;
-  tanggal_aktivitas: string;
-  jarak_km: number;
-  durasi: string;
-  pace: string;
-  bukti_strava: string | null;
-  profiles: { nama: string; bib_number: number } | null;
-};
-
-export default function AdminActivities({ rows }: { rows: Row[] }) {
+export default function AdminParticipantActivities({
+  activities,
+}: {
+  activities: Activity[];
+}) {
   const router = useRouter();
   const supabase = createClient();
   const [busyId, setBusyId] = useState<string | null>(null);
 
   async function handleDelete(id: string) {
-    if (!confirm("Hapus record aktivitas ini dari sistem?")) return;
+    if (!confirm("Hapus record aktivitas ini?")) return;
     setBusyId(id);
     const { error } = await supabase.from("activities").delete().eq("id", id);
     setBusyId(null);
@@ -34,41 +29,44 @@ export default function AdminActivities({ rows }: { rows: Row[] }) {
 
   return (
     <div className="card">
-      <h2 className="text-lg font-bold">Aktivitas Terbaru</h2>
-      <p className="text-sm text-muted">
-        50 record terbaru dari seluruh peserta, untuk pantauan cepat. Untuk menelusuri
-        seluruh riwayat aktivitas satu peserta tanpa batas, buka tab Peserta lalu klik
-        &ldquo;Lihat Aktivitas&rdquo;.
-      </p>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-bold">Seluruh Aktivitas ({activities.length})</h2>
+      </div>
 
-      <div className="mt-4 overflow-x-auto">
+      <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] border-collapse">
           <thead>
             <tr className="border-b border-line">
               <th className="table-head py-2">Tanggal</th>
-              <th className="table-head py-2">Peserta</th>
+              <th className="table-head py-2">Waktu Mulai</th>
               <th className="table-head py-2 text-right">Jarak</th>
+              <th className="table-head py-2 text-right">Durasi</th>
               <th className="table-head py-2 text-right">Pace</th>
               <th className="table-head py-2">Bukti</th>
               <th className="table-head py-2 text-right">Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
-              <tr key={r.id} className="border-b border-line/60 text-sm">
-                <td className="py-3">{formatDateID(r.tanggal_aktivitas)}</td>
-                <td className="py-3">
-                  <p className="font-medium">{r.profiles?.nama ?? "-"}</p>
-                  <p className="text-xs text-muted">BIB #{r.profiles?.bib_number}</p>
+            {activities.length === 0 && (
+              <tr>
+                <td colSpan={7} className="py-10 text-center text-sm text-muted">
+                  Peserta ini belum punya record aktivitas.
                 </td>
+              </tr>
+            )}
+            {activities.map((a) => (
+              <tr key={a.id} className="border-b border-line/60 text-sm">
+                <td className="py-3 font-medium">{formatDateID(a.tanggal_aktivitas)}</td>
+                <td className="py-3 text-muted">{formatTimeHM(a.waktu_mulai)}</td>
                 <td className="py-3 text-right font-semibold text-accent-light">
-                  {r.jarak_km.toFixed(2)} km
+                  {a.jarak_km.toFixed(2)} km
                 </td>
-                <td className="py-3 text-right text-muted">{paceToDisplay(r.pace)} /km</td>
+                <td className="py-3 text-right text-muted">{a.durasi.slice(0, 8)}</td>
+                <td className="py-3 text-right text-muted">{paceToDisplay(a.pace)} /km</td>
                 <td className="py-3">
-                  {r.bukti_strava ? (
+                  {a.bukti_strava ? (
                     <a
-                      href={r.bukti_strava}
+                      href={a.bukti_strava}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-accent-light hover:underline"
@@ -81,11 +79,11 @@ export default function AdminActivities({ rows }: { rows: Row[] }) {
                 </td>
                 <td className="py-3 text-right">
                   <button
-                    onClick={() => handleDelete(r.id)}
-                    disabled={busyId === r.id}
+                    onClick={() => handleDelete(a.id)}
+                    disabled={busyId === a.id}
                     className="btn-ghost-danger"
                   >
-                    {busyId === r.id ? "..." : "Hapus"}
+                    {busyId === a.id ? "..." : "Hapus"}
                   </button>
                 </td>
               </tr>

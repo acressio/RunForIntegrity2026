@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { formatKm } from "@/lib/utils";
 
@@ -129,6 +130,12 @@ export default function AdminParticipants({ rows }: { rows: Row[] }) {
                 </td>
                 <td className="py-3">
                   <div className="flex justify-end gap-2">
+                    <Link
+                      href={`/dashboard/admin/participants/${r.id}`}
+                      className="btn-secondary px-3 py-1.5 text-xs"
+                    >
+                      Lihat Aktivitas
+                    </Link>
                     <button
                       onClick={() => toggleAdmin(r)}
                       disabled={busyId === r.id}
