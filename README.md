@@ -13,6 +13,8 @@ Supabase (Auth, Postgres, RLS), siap deploy ke Vercel.
    - `supabase/003_revisi.sql` (target 50 km, periode 17 Agu–17 Sep 2026,
      bukti aktivitas wajib — **baca komentar di dalam file ini dulu**
      sebelum run, ada catatan penting soal data lama)
+   - `supabase/004_batasi_domain_email.sql` (wajibkan email @bpkp.go.id
+     saat daftar, ditegakkan di level database)
 3. Buka **Authentication > Providers > Email**:
    - Untuk onboarding cepat (tanpa perlu setup SMTP sendiri), matikan
      **"Confirm email"** agar peserta langsung login setelah sign up.

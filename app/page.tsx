@@ -4,14 +4,18 @@ import { createClient } from "@/lib/supabase/server";
 export default async function RootPage({
   searchParams,
 }: {
-  searchParams: { code?: string };
+  searchParams: { code?: string; token_hash?: string; type?: string };
 }) {
-  // Jaring pengaman: kalau link email Supabase (reset password / konfirmasi)
-  // mendarat di root karena Redirect URL belum pas dikonfigurasi, teruskan
-  // "code"-nya ke /auth/reset-callback (bukan /auth/callback) supaya paling
-  // aman: user diminta set password baru dulu, bukan langsung masuk dashboard.
+  // Jaring pengaman: kalau link email mendarat di root (mis. Site URL
+  // belum tepat), teruskan ke /auth/callback yang sekarang bisa membaca
+  // jenis link (token_hash + type) secara eksplisit, bukan menebak.
+  if (searchParams?.token_hash && searchParams?.type) {
+    redirect(
+      `/auth/callback?token_hash=${encodeURIComponent(searchParams.token_hash)}&type=${encodeURIComponent(searchParams.type)}`
+    );
+  }
   if (searchParams?.code) {
-    redirect(`/auth/reset-callback?code=${encodeURIComponent(searchParams.code)}`);
+    redirect(`/auth/callback?code=${encodeURIComponent(searchParams.code)}`);
   }
 
   const supabase = createClient();

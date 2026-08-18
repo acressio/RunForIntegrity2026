@@ -27,6 +27,11 @@ export default function SignupPage() {
       return;
     }
 
+    if (!email.toLowerCase().endsWith("@bpkp.go.id")) {
+      setError("Pendaftaran hanya untuk email dinas dengan domain @bpkp.go.id.");
+      return;
+    }
+
     setLoading(true);
 
     const { data, error } = await supabase.auth.signUp({
@@ -41,7 +46,11 @@ export default function SignupPage() {
     setLoading(false);
 
     if (error) {
-      setError(error.message);
+      setError(
+        error.message.includes("bpkp.go.id")
+          ? "Pendaftaran hanya untuk email dinas dengan domain @bpkp.go.id."
+          : error.message
+      );
       return;
     }
 
@@ -140,6 +149,9 @@ export default function SignupPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="nama@bpkp.go.id"
             />
+            <p className="mt-1 text-[11px] text-muted">
+              Wajib pakai email dinas @bpkp.go.id.
+            </p>
           </div>
 
           <div>
