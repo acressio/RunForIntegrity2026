@@ -44,6 +44,19 @@ export type LeaderboardRow = {
   rank: number;
 };
 
+export type RaceCategoryRow = {
+  user_id: string;
+  nama: string;
+  unit_kerja: string;
+  bib_number: number;
+  total_km: number;
+  avg_pace_seconds: number | null;
+  total_elevation: number;
+  max_streak: number;
+  streak_end_date: string | null;
+  last_activity_at: string | null;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -72,6 +85,9 @@ export type Database = {
     Views: {
       leaderboard: {
         Row: LeaderboardRow;
+      };
+      race_categories: {
+        Row: RaceCategoryRow;
       };
     };
   };

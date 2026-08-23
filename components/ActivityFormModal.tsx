@@ -170,7 +170,7 @@ export default function ActivityFormModal({
           </div>
 
           <div>
-            <label className="label-field">Durasi</label>
+            <label className="label-field">Durasi (Elapsed Time)</label>
             <div className="grid grid-cols-3 gap-3">
               <input
                 type="number"

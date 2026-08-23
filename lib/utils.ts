@@ -53,6 +53,18 @@ export function hmsInputToInterval(h: number, m: number, s: number): string {
   ).padStart(2, "0")}`;
 }
 
+/** Formats a pace given directly in seconds/km (used by the race_categories view). */
+export function secondsToPaceDisplay(seconds: number | null): string {
+  if (seconds === null || seconds === undefined || seconds <= 0) return "-";
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.round(seconds % 60);
+  if (h > 0) {
+    return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  }
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+
 export function formatKm(km: number | null | undefined, decimals = 2): string {
   if (km === null || km === undefined) return "-";
   return km.toLocaleString("id-ID", {

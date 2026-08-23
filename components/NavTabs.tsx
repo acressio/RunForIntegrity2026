@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const baseTabs = [
   { href: "/dashboard/input-activity", label: "Input Activity" },
   { href: "/dashboard/leaderboard", label: "Leaderboard" },
+  { href: "/dashboard/race-statistics", label: "Race Statistics" },
 ];
 
 export default function NavTabs({ isAdmin }: { isAdmin: boolean }) {

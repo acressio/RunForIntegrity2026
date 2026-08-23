@@ -15,6 +15,8 @@ Supabase (Auth, Postgres, RLS), siap deploy ke Vercel.
      sebelum run, ada catatan penting soal data lama)
    - `supabase/004_batasi_domain_email.sql` (wajibkan email @bpkp.go.id
      saat daftar, ditegakkan di level database)
+   - `supabase/005_race_statistics.sql` (view untuk halaman Race
+     Statistics: rekor streak, avg pace, elevation gain per peserta)
 3. Buka **Authentication > Providers > Email**:
    - Untuk onboarding cepat (tanpa perlu setup SMTP sendiri), matikan
      **"Confirm email"** agar peserta langsung login setelah sign up.

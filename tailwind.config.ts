@@ -18,6 +18,11 @@ const config: Config = {
         },
         line: "#232a42",
         muted: "#8b93ad",
+        rank: {
+          gold: "#f5c542",
+          silver: "#c7cbd1",
+          bronze: "#cd8a4f",
+        },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],

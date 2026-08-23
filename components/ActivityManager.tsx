@@ -58,7 +58,7 @@ export default function ActivityManager({
         <div>
           <h2 className="text-lg font-bold">Aktivitas Saya</h2>
           <p className="text-sm text-muted">
-            Catat aktivitas selama race window{" "}
+            Catat aktivitas selama periode race{" "}
             {formatDateID(raceStart)}–{formatDateID(raceEnd)}.
           </p>
         </div>
