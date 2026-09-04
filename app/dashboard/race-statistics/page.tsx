@@ -2,10 +2,12 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import RaceStatsHeader from "@/components/RaceStatsHeader";
 import RaceCategoryCard, { type CategoryEntry } from "@/components/RaceCategoryCard";
-import { formatKm, secondsToPaceDisplay } from "@/lib/utils";
+import RaceUnitCard, { type UnitRow, type MemberRow } from "@/components/RaceUnitCard";
+import { formatKm, secondsToPaceDisplay, intervalToSeconds } from "@/lib/utils";
 import type { RaceCategoryRow } from "@/types/database";
 
 const MIN_KM_FOR_NGACIR = 10;
+const TOP_UNITS_COUNT = 5;
 
 function tsAsc(a: string | null, b: string | null): number {
   if (!a && !b) return 0;
@@ -33,10 +35,13 @@ export default async function RaceStatisticsPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const [{ data: settings }, { data: rows }] = await Promise.all([
-    supabase.from("event_settings").select("*").single(),
-    supabase.from("race_categories").select("*"),
-  ]);
+  const [{ data: settings }, { data: rows }, { data: unitRows }, { data: leaderboardRows }] =
+    await Promise.all([
+      supabase.from("event_settings").select("*").single(),
+      supabase.from("race_categories").select("*"),
+      supabase.from("race_unit_summary").select("*"),
+      supabase.from("leaderboard").select("user_id, nama, unit_kerja, total_km"),
+    ]);
 
   const targetKm = settings?.target_km ?? 50;
   const raceStart = settings?.race_start ?? "";
@@ -72,6 +77,34 @@ export default async function RaceStatisticsPage() {
   const konsisten = [...allRows]
     .filter((r) => r.max_streak > 0)
     .sort((a, b) => b.max_streak - a.max_streak || tsAsc(a.streak_end_date, b.streak_end_date));
+
+  // Si Paling Kompak - unit kerja dengan total jarak terjauh
+  const topUnits: UnitRow[] = (unitRows ?? [])
+    .filter((u) => u.total_km > 0)
+    .sort((a, b) => b.total_km - a.total_km)
+    .slice(0, TOP_UNITS_COUNT)
+    .map((u) => ({
+      unitKerja: u.unit_kerja,
+      totalKm: u.total_km,
+      totalEntry: u.total_entry,
+      totalDurasiSeconds: intervalToSeconds(u.total_durasi),
+      avgPaceSeconds: u.avg_pace_seconds,
+      activeMemberCount: u.active_member_count,
+    }));
+
+  const membersByUnit: Record<string, MemberRow[]> = {};
+  for (const row of leaderboardRows ?? []) {
+    if (row.total_km <= 0) continue;
+    if (!membersByUnit[row.unit_kerja]) membersByUnit[row.unit_kerja] = [];
+    membersByUnit[row.unit_kerja].push({
+      userId: row.user_id,
+      nama: row.nama,
+      totalKm: row.total_km,
+    });
+  }
+  for (const unit of Object.keys(membersByUnit)) {
+    membersByUnit[unit].sort((a, b) => b.totalKm - a.totalKm);
+  }
 
   return (
     <div className="space-y-8">
@@ -118,6 +151,8 @@ export default async function RaceStatisticsPage() {
             entries={toEntries(konsisten, (r) => `${r.max_streak} hari`)}
           />
         </div>
+
+        <RaceUnitCard units={topUnits} membersByUnit={membersByUnit} targetKm={targetKm} />
       </div>
     </div>
   );

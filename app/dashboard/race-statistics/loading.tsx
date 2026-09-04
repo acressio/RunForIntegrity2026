@@ -18,6 +18,7 @@ export default function Loading() {
             <div key={i} className="card-dark h-48" />
           ))}
         </div>
+        <div className="card-dark mt-5 h-64" />
       </div>
     </div>
   );

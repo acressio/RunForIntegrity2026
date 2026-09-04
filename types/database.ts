@@ -57,6 +57,16 @@ export type RaceCategoryRow = {
   last_activity_at: string | null;
 };
 
+export type RaceUnitSummaryRow = {
+  unit_kerja: string;
+  total_km: number;
+  total_entry: number;
+  total_durasi: string;
+  avg_pace_seconds: number | null;
+  member_count: number;
+  active_member_count: number;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -88,6 +98,9 @@ export type Database = {
       };
       race_categories: {
         Row: RaceCategoryRow;
+      };
+      race_unit_summary: {
+        Row: RaceUnitSummaryRow;
       };
     };
   };

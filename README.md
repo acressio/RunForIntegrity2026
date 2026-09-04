@@ -17,6 +17,8 @@ Supabase (Auth, Postgres, RLS), siap deploy ke Vercel.
      saat daftar, ditegakkan di level database)
    - `supabase/005_race_statistics.sql` (view untuk halaman Race
      Statistics: rekor streak, avg pace, elevation gain per peserta)
+   - `supabase/006_race_unit_summary.sql` (view agregat per unit kerja
+     untuk kategori "Si Paling Kompak")
 3. Buka **Authentication > Providers > Email**:
    - Untuk onboarding cepat (tanpa perlu setup SMTP sendiri), matikan
      **"Confirm email"** agar peserta langsung login setelah sign up.
