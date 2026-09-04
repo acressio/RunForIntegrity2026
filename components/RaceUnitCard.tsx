@@ -45,7 +45,7 @@ export default function RaceUnitCard({
   }
 
   return (
-    <div className="card-dark">
+    <div className="card-dark mt-5">
       <div className="mb-1 flex items-center gap-2.5">
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-accent/15 text-lg">
           🤝
