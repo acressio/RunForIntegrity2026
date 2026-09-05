@@ -69,6 +69,10 @@ export default function ActivityFormModal({
       setError("Jarak minimal 1.00 km.");
       return;
     }
+    if (Number(jarak) > 10) {
+      setError("Jarak maksimal 10.00 km per aktivitas.");
+      return;
+    }
     if (!buktiStrava.trim()) {
       setError("Lengkapi data: bukti aktivitas wajib diisi.");
       return;
@@ -161,16 +165,19 @@ export default function ActivityFormModal({
               type="number"
               step="0.01"
               min="1"
+              max="10"
               required
               className="input-field"
               value={jarak}
               onChange={(e) => setJarak(e.target.value)}
             />
-            <p className="mt-1 text-[11px] text-muted">Jarak minimal 1.00 km.</p>
+            <p className="mt-1 text-[11px] text-muted">
+              Jarak minimal 1.00 km, maksimal 10.00 km per aktivitas.
+            </p>
           </div>
 
           <div>
-            <label className="label-field">Durasi (Elapsed Time)</label>
+            <label className="label-field">Durasi</label>
             <div className="grid grid-cols-3 gap-3">
               <input
                 type="number"
