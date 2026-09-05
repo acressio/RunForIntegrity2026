@@ -1,5 +1,9 @@
 export const UNIT_KERJA_OPTIONS = [
-  "Deputi Bidang Investigasi",
+  "Direktorat Investigasi I",
+  "Direktorat Investigasi II",
+  "Direktorat Investigasi III",
+  "Direktorat Investigasi IV",
+  "Direktorat Investigasi V",
   "Perwakilan BPKP Aceh",
   "Perwakilan BPKP Provinsi Sumatera Utara",
   "Perwakilan BPKP Provinsi Sumatera Barat",
