@@ -19,6 +19,11 @@ Supabase (Auth, Postgres, RLS), siap deploy ke Vercel.
      Statistics: rekor streak, avg pace, elevation gain per peserta)
    - `supabase/006_race_unit_summary.sql` (view agregat per unit kerja
      untuk kategori "Si Paling Kompak")
+   - `supabase/007_admin_hierarchy.sql` (sistem Admin Utama & Admin
+     Biasa, log aktivitas admin, safeguard minimal 1 Admin Utama —
+     **wajib jalankan perintah UPDATE di baris paling bawah file ini**,
+     ganti email sesuai akun admin Anda, supaya ada 1 Admin Utama
+     sejak awal)
 3. Buka **Authentication > Providers > Email**:
    - Untuk onboarding cepat (tanpa perlu setup SMTP sendiri), matikan
      **"Confirm email"** agar peserta langsung login setelah sign up.

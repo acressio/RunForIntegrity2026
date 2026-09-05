@@ -55,7 +55,7 @@ export async function middleware(request: NextRequest) {
       .eq("id", user.id)
       .single();
 
-    if (profile?.role !== "admin") {
+    if (profile?.role !== "admin" && profile?.role !== "admin_utama") {
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard/input-activity";
       return NextResponse.redirect(url);

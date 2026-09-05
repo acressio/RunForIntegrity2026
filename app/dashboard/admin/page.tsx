@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import AdminEventSettings from "@/components/AdminEventSettings";
 import AdminParticipants from "@/components/AdminParticipants";
 import AdminActivities from "@/components/AdminActivities";
+import AdminAuditLog from "@/components/AdminAuditLog";
 
 export default async function AdminPage() {
   const supabase = createClient();
@@ -17,9 +18,12 @@ export default async function AdminPage() {
     .eq("id", user.id)
     .single();
 
-  if (myProfile?.role !== "admin") redirect("/dashboard/input-activity");
+  const myRole = myProfile?.role;
+  if (myRole !== "admin" && myRole !== "admin_utama") redirect("/dashboard/input-activity");
 
-  const [{ data: settings }, { data: profiles }, { data: leaderboard }, { data: activities }] =
+  const isAdminUtama = myRole === "admin_utama";
+
+  const [{ data: settings }, { data: profiles }, { data: leaderboard }, { data: activities }, auditLogResult] =
     await Promise.all([
       supabase.from("event_settings").select("*").single(),
       supabase
@@ -32,6 +36,13 @@ export default async function AdminPage() {
         .select("id, tanggal_aktivitas, jarak_km, durasi, pace, bukti_strava, profiles(nama, bib_number)")
         .order("created_at", { ascending: false })
         .limit(50),
+      isAdminUtama
+        ? supabase
+            .from("admin_audit_log")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(100)
+        : Promise.resolve({ data: null }),
     ]);
 
   const kmByUser = new Map((leaderboard ?? []).map((l) => [l.user_id, l.total_km]));
@@ -45,15 +56,19 @@ export default async function AdminPage() {
       <div>
         <h1 className="text-2xl font-black">Admin Panel</h1>
         <p className="text-sm text-gray-500">
-          Kelola pengaturan event, peserta, dan moderasi aktivitas.
+          {isAdminUtama
+            ? "Kelola pengaturan event, peserta, admin, dan moderasi aktivitas."
+            : "Kelola peserta dan moderasi aktivitas."}
         </p>
       </div>
 
-      {settings && <AdminEventSettings settings={settings} />}
+      {isAdminUtama && settings && <AdminEventSettings settings={settings} />}
 
-      <AdminParticipants rows={participantRows} />
+      <AdminParticipants rows={participantRows} isAdminUtama={isAdminUtama} currentUserId={user.id} />
 
       <AdminActivities rows={(activities as any) ?? []} />
+
+      {isAdminUtama && <AdminAuditLog rows={auditLogResult.data ?? []} />}
     </div>
   );
 }

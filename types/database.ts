@@ -4,7 +4,7 @@ export type Profile = {
   email: string;
   unit_kerja: string;
   bib_number: number;
-  role: "peserta" | "admin";
+  role: "peserta" | "admin" | "admin_utama";
   foto_profil: string | null;
   created_at: string;
 };
@@ -67,6 +67,15 @@ export type RaceUnitSummaryRow = {
   active_member_count: number;
 };
 
+export type AuditLogRow = {
+  id: string;
+  actor_id: string | null;
+  actor_nama: string;
+  aksi: "hapus_aktivitas" | "hapus_peserta" | "ubah_role" | "ubah_pengaturan_event";
+  detail: string;
+  created_at: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -85,6 +94,11 @@ export type Database = {
           durasi: string;
         };
         Update: Partial<Activity>;
+      };
+      admin_audit_log: {
+        Row: AuditLogRow;
+        Insert: never;
+        Update: never;
       };
       event_settings: {
         Row: EventSettings;

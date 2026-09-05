@@ -43,7 +43,7 @@ export default async function DashboardLayout({
           />
         </div>
 
-        <NavTabs isAdmin={profile?.role === "admin"} />
+        <NavTabs isAdmin={profile?.role === "admin" || profile?.role === "admin_utama"} />
       </header>
 
       <div className="flex-1 bg-white">
