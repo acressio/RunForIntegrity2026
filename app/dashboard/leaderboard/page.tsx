@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import LeaderboardTable from "@/components/LeaderboardTable";
 import { formatKm, secondsToHMS, intervalToSeconds, paceToDisplay } from "@/lib/utils";
 
 export default async function LeaderboardPage() {
@@ -11,7 +12,7 @@ export default async function LeaderboardPage() {
 
   const [{ data: me }, { data: rows }] = await Promise.all([
     supabase.from("leaderboard").select("*").eq("user_id", user.id).single(),
-    supabase.from("leaderboard").select("*").order("rank", { ascending: true }).limit(200),
+    supabase.from("leaderboard").select("*").order("rank", { ascending: true }).limit(500),
   ]);
 
   return (
@@ -36,47 +37,7 @@ export default async function LeaderboardPage() {
         </div>
       </div>
 
-      <div className="card mt-8 overflow-x-auto">
-        <h3 className="mb-4 text-lg font-bold">Leaderboard</h3>
-        <table className="w-full min-w-[720px] border-collapse">
-          <thead>
-            <tr className="border-b border-line bg-panel2">
-              <th className="table-head px-3 py-3">Rank</th>
-              <th className="table-head px-3 py-3">Nama</th>
-              <th className="table-head px-3 py-3 text-right">Total KM</th>
-              <th className="table-head px-3 py-3 text-right">Total Entry</th>
-              <th className="table-head px-3 py-3 text-right">Durasi Total</th>
-              <th className="table-head px-3 py-3 text-right">Pace Avg</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(rows ?? []).map((r) => (
-              <tr
-                key={r.user_id}
-                className={`border-b border-line/60 text-sm ${
-                  r.user_id === user.id ? "bg-accent/10" : ""
-                }`}
-              >
-                <td className="px-3 py-3 font-semibold">{r.rank}</td>
-                <td className="px-3 py-3">
-                  <p className="font-medium">{r.nama}</p>
-                  <p className="text-xs text-muted">{r.unit_kerja}</p>
-                </td>
-                <td className="px-3 py-3 text-right font-semibold text-accent-light">
-                  {formatKm(r.total_km)} KM
-                </td>
-                <td className="px-3 py-3 text-right text-muted">{r.total_entry}</td>
-                <td className="px-3 py-3 text-right text-muted">
-                  {secondsToHMS(intervalToSeconds(r.total_durasi))}
-                </td>
-                <td className="px-3 py-3 text-right text-muted">
-                  {paceToDisplay(r.avg_pace)} /km
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <LeaderboardTable rows={rows ?? []} currentUserId={user.id} />
     </div>
   );
 }
