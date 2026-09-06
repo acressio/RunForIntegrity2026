@@ -11,8 +11,10 @@ export default function SignupPage() {
   const supabase = createClient();
 
   const [nama, setNama] = useState("");
+  const [statusPegawai, setStatusPegawai] = useState("");
   const [email, setEmail] = useState("");
   const [unitKerja, setUnitKerja] = useState("");
+  const [minatJersey, setMinatJersey] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -22,8 +24,18 @@ export default function SignupPage() {
     e.preventDefault();
     setError(null);
 
+    if (!statusPegawai) {
+      setError("Silakan pilih status pegawai.");
+      return;
+    }
+
     if (!unitKerja) {
       setError("Silakan pilih unit kerja.");
+      return;
+    }
+
+    if (!minatJersey) {
+      setError("Silakan pilih jawaban minat jersey.");
       return;
     }
 
@@ -38,7 +50,12 @@ export default function SignupPage() {
       email,
       password,
       options: {
-        data: { nama, unit_kerja: unitKerja },
+        data: {
+          nama,
+          unit_kerja: unitKerja,
+          status_pegawai: statusPegawai,
+          minat_jersey: minatJersey,
+        },
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
@@ -88,7 +105,7 @@ export default function SignupPage() {
           <img
             src="/logo-run-for-integrity.png"
             alt="Run For Integrity"
-            className="mx-auto mb-4 h-32 w-32 rounded-xl2 object-contain"
+            className="mx-auto mb-4 h-20 w-20 rounded-xl2 object-contain"
           />
           <h1 className="text-2xl font-black tracking-tight">Daftar Peserta</h1>
         </div>
@@ -115,8 +132,31 @@ export default function SignupPage() {
           </div>
 
           <div>
+            <label className="label-field" htmlFor="status_pegawai">
+              Status Pegawai
+            </label>
+            <select
+              id="status_pegawai"
+              required
+              className="input-field"
+              value={statusPegawai}
+              onChange={(e) => setStatusPegawai(e.target.value)}
+            >
+              <option value="" disabled>
+                Pilih status pegawai
+              </option>
+              <option value="Pegawai Aktif Direktorat/Bidang Investigasi">
+                Pegawai Aktif Direktorat/Bidang Investigasi
+              </option>
+              <option value="Diaspora (pernah bekerja di Direktorat/Bidang Investigasi)">
+                Diaspora (pernah bekerja di Direktorat/Bidang Investigasi)
+              </option>
+            </select>
+          </div>
+
+          <div>
             <label className="label-field" htmlFor="unit_kerja">
-              Unit Kerja
+              Unit Kerja Saat Ini
             </label>
             <select
               id="unit_kerja"
@@ -134,6 +174,28 @@ export default function SignupPage() {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="label-field" htmlFor="minat_jersey">
+              Apakah tertarik untuk membeli jersey?
+            </label>
+            <select
+              id="minat_jersey"
+              required
+              className="input-field"
+              value={minatJersey}
+              onChange={(e) => setMinatJersey(e.target.value)}
+            >
+              <option value="" disabled>
+                Pilih jawaban
+              </option>
+              <option value="Ya">Ya</option>
+              <option value="Tidak">Tidak</option>
+            </select>
+            <p className="mt-1 text-[11px] text-muted">
+              Hanya untuk survei awal, pemesanan akan diinformasikan lebih lanjut.
+            </p>
           </div>
 
           <div>
