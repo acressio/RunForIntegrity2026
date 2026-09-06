@@ -20,7 +20,8 @@ export default async function AdminParticipantDetailPage({
     .select("role")
     .eq("id", user.id)
     .single();
-  if (myProfile?.role !== "admin") redirect("/dashboard/input-activity");
+  if (myProfile?.role !== "admin" && myProfile?.role !== "admin_utama")
+    redirect("/dashboard/input-activity");
 
   const [{ data: profile }, { data: leaderboardRow }, { data: activities }] =
     await Promise.all([
