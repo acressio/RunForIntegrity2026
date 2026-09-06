@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import ActivityFormModal from "./ActivityFormModal";
-import { formatDateID, formatTimeHM, paceToDisplay } from "@/lib/utils";
+import { formatDateID, formatTimeHM, paceToDisplay, getEditableDateRange } from "@/lib/utils";
 import type { Activity } from "@/types/database";
 
 export default function ActivityManager({
@@ -23,6 +23,7 @@ export default function ActivityManager({
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Activity | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const editableRange = getEditableDateRange(raceStart, raceEnd);
 
   function openAdd() {
     setEditing(null);
@@ -58,7 +59,7 @@ export default function ActivityManager({
         <div>
           <h2 className="text-lg font-bold">Aktivitas Saya</h2>
           <p className="text-sm text-muted">
-            Catat aktivitas selama periode race{" "}
+            Catat aktivitas selama race window{" "}
             {formatDateID(raceStart)}–{formatDateID(raceEnd)}.
           </p>
         </div>
@@ -86,28 +87,41 @@ export default function ActivityManager({
                 </td>
               </tr>
             )}
-            {activities.map((a) => (
-              <tr key={a.id} className="border-b border-line/60 text-sm">
-                <td className="py-3 font-medium">{formatDateID(a.tanggal_aktivitas)}</td>
-                <td className="py-3 font-semibold">{a.jarak_km.toFixed(2)} km</td>
-                <td className="py-3 text-muted">{a.durasi.slice(0, 8)}</td>
-                <td className="py-3 text-muted">{paceToDisplay(a.pace)}</td>
-                <td className="py-3">
-                  <div className="flex justify-end gap-2">
-                    <button onClick={() => openEdit(a)} className="btn-secondary px-3 py-1.5 text-xs">
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(a.id)}
-                      disabled={deletingId === a.id}
-                      className="btn-ghost-danger"
-                    >
-                      {deletingId === a.id ? "..." : "Hapus"}
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {activities.map((a) => {
+              const editable =
+                a.tanggal_aktivitas >= editableRange.min && a.tanggal_aktivitas <= editableRange.max;
+              return (
+                <tr key={a.id} className="border-b border-line/60 text-sm">
+                  <td className="py-3 font-medium">{formatDateID(a.tanggal_aktivitas)}</td>
+                  <td className="py-3 font-semibold">{a.jarak_km.toFixed(2)} km</td>
+                  <td className="py-3 text-muted">{a.durasi.slice(0, 8)}</td>
+                  <td className="py-3 text-muted">{paceToDisplay(a.pace)}</td>
+                  <td className="py-3">
+                    <div className="flex justify-end gap-2">
+                      <button
+                        onClick={() => openEdit(a)}
+                        disabled={!editable}
+                        title={
+                          editable
+                            ? undefined
+                            : "Sudah lewat 7 hari sejak tanggal aktivitas, tidak bisa diedit lagi."
+                        }
+                        className="btn-secondary px-3 py-1.5 text-xs disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(a.id)}
+                        disabled={deletingId === a.id}
+                        className="btn-ghost-danger"
+                      >
+                        {deletingId === a.id ? "..." : "Hapus"}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

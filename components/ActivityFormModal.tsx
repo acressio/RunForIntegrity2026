@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { hmsInputToInterval } from "@/lib/utils";
+import { hmsInputToInterval, getEditableDateRange } from "@/lib/utils";
 import DatePickerField from "./DatePickerField";
 import TimeSelect24 from "./TimeSelect24";
 import type { Activity } from "@/types/database";
@@ -34,6 +34,7 @@ export default function ActivityFormModal({
   const supabase = createClient();
   const isEdit = Boolean(activity);
   const durasiParts = secondsPartsFromInterval(activity?.durasi);
+  const editableRange = getEditableDateRange(raceStart, raceEnd);
 
   const [tanggal, setTanggal] = useState(activity?.tanggal_aktivitas ?? "");
   const [jamMulai, setJamMulai] = useState(activity?.waktu_mulai?.slice(0, 2) ?? "");
@@ -144,9 +145,12 @@ export default function ActivityFormModal({
             <DatePickerField
               value={tanggal}
               onChange={setTanggal}
-              min={raceStart}
-              max={raceEnd}
+              min={editableRange.min}
+              max={editableRange.max}
             />
+            <p className="mt-1 text-[11px] text-muted">
+              Aktivitas maksimal diupload 7 hari setelah tanggal kejadian.
+            </p>
           </div>
 
           <div>
