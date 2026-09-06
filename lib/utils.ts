@@ -91,3 +91,32 @@ export function daysBetween(from: Date, to: Date): number {
   const ms = to.setHours(0, 0, 0, 0) - from.setHours(0, 0, 0, 0);
   return Math.round(ms / 86400000);
 }
+
+/** "Hari ini" versi WIB (Asia/Jakarta), format yyyy-mm-dd - konsisten
+ * berapa pun zona waktu perangkat/server yang menjalankan kode ini. */
+export function getWIBDateString(date: Date = new Date()): string {
+  return date.toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" });
+}
+
+export function addDaysToDateString(dateStr: string, days: number): string {
+  const d = new Date(dateStr + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * Rentang tanggal yang boleh dipilih/diedit: 7 hari berjalan
+ * (H-7 sampai hari ini), dibatasi juga oleh periode race.
+ * Dipakai untuk input aktivitas baru MAUPUN edit aktivitas lama -
+ * aturan yang sama untuk keduanya (Opsi A).
+ */
+export function getEditableDateRange(
+  raceStart: string,
+  raceEnd: string
+): { min: string; max: string } {
+  const today = getWIBDateString();
+  const sevenDaysAgo = addDaysToDateString(today, -7);
+  const min = sevenDaysAgo > raceStart ? sevenDaysAgo : raceStart;
+  const max = today < raceEnd ? today : raceEnd;
+  return { min, max };
+}
