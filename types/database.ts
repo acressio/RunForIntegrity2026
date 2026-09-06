@@ -3,6 +3,11 @@ export type Profile = {
   nama: string;
   email: string;
   unit_kerja: string;
+  status_pegawai:
+    | "Pegawai Aktif Direktorat/Bidang Investigasi"
+    | "Diaspora (pernah bekerja di Direktorat/Bidang Investigasi)"
+    | null;
+  minat_jersey: "Ya" | "Tidak" | null;
   bib_number: number;
   role: "peserta" | "admin" | "admin_utama";
   foto_profil: string | null;
