@@ -43,7 +43,7 @@ export const UNIT_KERJA_OPTIONS = [
   "Deputi Bidang Perekonomian, Infrastruktur, dan Pembangunan Kewilayahan",
   "Deputi Bidang Politik, Keamanan, Hukum, Pembangunan Manusia, dan Kebudayaan",
   "Deputi Bidang Pemberdayaan Masyarakat dan Pangan", 
-  "Deputi Bidang Pengawasan Penyelenggaraan Keuangan Daerah"
+  "Deputi Bidang Pengawasan Penyelenggaraan Keuangan Daerah",
   "Deputi Bidang Akuntan Negara",
   "Inspektorat dan Pusat-Pusat",
   "Sekretariat Utama",
