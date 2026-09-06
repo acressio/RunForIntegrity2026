@@ -1,4 +1,3 @@
-import { formatDateID } from "@/lib/utils";
 import type { AuditLogRow } from "@/types/database";
 
 const AKSI_LABEL: Record<AuditLogRow["aksi"], string> = {
@@ -17,10 +16,19 @@ const AKSI_BADGE_CLASS: Record<AuditLogRow["aksi"], string> = {
 
 function formatWaktu(iso: string): string {
   const d = new Date(iso);
-  return `${formatDateID(iso.slice(0, 10))} ${d.toLocaleTimeString("id-ID", {
+  const tanggal = d.toLocaleDateString("id-ID", {
+    timeZone: "Asia/Jakarta",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+  const jam = d.toLocaleTimeString("id-ID", {
+    timeZone: "Asia/Jakarta",
     hour: "2-digit",
     minute: "2-digit",
-  })}`;
+    hour12: false,
+  });
+  return `${tanggal} ${jam} WIB`;
 }
 
 export default function AdminAuditLog({ rows }: { rows: AuditLogRow[] }) {
